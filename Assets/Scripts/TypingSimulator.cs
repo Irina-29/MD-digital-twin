@@ -13,6 +13,7 @@ public class Finger
 public class TypingSimulator : MonoBehaviour
 {
     public Finger[] fingers;
+    public SensorSimulator sensorInput; // reference to the sensor input script
 
     [Header("Typing speed settings")]
     public float pressAngle = 35f; // curl of fingers while typing
@@ -22,22 +23,9 @@ public class TypingSimulator : MonoBehaviour
 
     [Header("Wrist movement")]
     public Transform wristBoneR, wristBoneL;
-    public float wristTiltAngle = 7f; // max angle the wrist will tilt
     private Quaternion baseWristRotationR, baseWristRotationL; // original wrist rotation
     private Quaternion[] baseRotations; // initial local rotations of all finger bones (to preserve base pose)
     private float[] fingerCooldowns; // ensure each finger can't be typed again too quickly
-
-    // RIGHT wrist
-    private float targetVerticalR = 0f, currentVerticalR = 0f;
-    private float targetHorizontalR = 0f, currentHorizontalR = 0f;
-    private float snapTimerR = 0f, snapDurationR = 0.3f;
-
-    // LEFT wrist
-    private float targetVerticalL = 0f, currentVerticalL = 0f;
-    private float targetHorizontalL = 0f, currentHorizontalL = 0f;
-    private float snapTimerL = 0f, snapDurationL = 0.3f;
-
-    // each wrist moves independently on vertical (up/down) and horizontal (left/right) axis
 
     void Start()
     {
@@ -63,36 +51,24 @@ public class TypingSimulator : MonoBehaviour
     // Runs every frame to animate the wrist movement
     void Update()
     {
-        // RIGHT WRIST update
-        snapTimerR -= Time.deltaTime;
-        if (snapTimerR <= 0f)
-        {
-            targetVerticalR = Random.Range(-wristTiltAngle, wristTiltAngle);
-            targetHorizontalR = Random.Range(-wristTiltAngle * 0.7f, wristTiltAngle * 0.7f);
-            snapDurationR = Random.Range(0.2f, 0.35f);
-            snapTimerR = snapDurationR;
-        }
-        currentVerticalR = Mathf.Lerp(currentVerticalR, targetVerticalR, Time.deltaTime * 4f);
-        currentHorizontalR = Mathf.Lerp(currentHorizontalR, targetHorizontalR, Time.deltaTime * 4f);
+        if (sensorInput == null) return;
+
         if (wristBoneR != null)
         {
-            wristBoneR.localRotation = baseWristRotationR * Quaternion.Euler(currentVerticalR, 0f, currentHorizontalR);
+            wristBoneR.localRotation = baseWristRotationR * Quaternion.Euler(
+                sensorInput.wristVerticalR,
+                0f,
+                sensorInput.wristHorizontalR
+            );
         }
 
-        // LEFT WRIST update
-        snapTimerL -= Time.deltaTime;
-        if (snapTimerL <= 0f)
-        {
-            targetVerticalL = Random.Range(-wristTiltAngle, wristTiltAngle);
-            targetHorizontalL = Random.Range(-wristTiltAngle * 0.7f, wristTiltAngle * 0.7f);
-            snapDurationL = Random.Range(0.2f, 0.35f);
-            snapTimerL = snapDurationL;
-        }
-        currentVerticalL = Mathf.Lerp(currentVerticalL, targetVerticalL, Time.deltaTime * 4f);
-        currentHorizontalL = Mathf.Lerp(currentHorizontalL, targetHorizontalL, Time.deltaTime * 4f);
         if (wristBoneL != null)
         {
-            wristBoneL.localRotation = baseWristRotationL * Quaternion.Euler(currentVerticalL, 0f, -currentHorizontalL); // mirrored
+            wristBoneL.localRotation = baseWristRotationL * Quaternion.Euler(
+                sensorInput.wristVerticalL,
+                0f,
+                -sensorInput.wristHorizontalL // mirrored for left hand
+            );
         }
     }
 
