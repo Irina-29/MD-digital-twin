@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SensorSimulator : MonoBehaviour
 {
+    public PostureAnalyzer postureAnalyzer; // Reference to the PostureAnalyzer script
+
     [Header("Simulation Mode")]
     public bool simulate = true;  // Set to false when using real sensors
 
@@ -47,6 +49,17 @@ public class SensorSimulator : MonoBehaviour
             }
             wristVerticalL = Mathf.Lerp(wristVerticalL, targetVerticalL, Time.deltaTime * snapSpeed);
             wristHorizontalL = Mathf.Lerp(wristHorizontalL, targetHorizontalL, Time.deltaTime * snapSpeed);
+
+            if (postureAnalyzer != null)
+            {
+                // Vertical (Flexion/Extension)
+                postureAnalyzer.flexionAngle = wristVerticalR > 0 ? wristVerticalR : 0f;
+                postureAnalyzer.extensionAngle = wristVerticalR < 0 ? -wristVerticalR : 0f;
+
+                // Horizontal (Radial/Ulnar)
+                postureAnalyzer.radialDeviation = wristHorizontalR > 0 ? wristHorizontalR : 0f;
+                postureAnalyzer.ulnarDeviation = wristHorizontalR < 0 ? -wristHorizontalR : 0f;
+            }
         }
         else
         {

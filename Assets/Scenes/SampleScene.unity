@@ -716,14 +716,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee7dd53d0c9f722439f5f20ca033f12f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  postureAnalyzer: {fileID: 1312786848}
   simulate: 1
   wristVerticalR: 0
   wristHorizontalR: 0
   wristVerticalL: 0
   wristHorizontalL: 0
-  maxVerticalAngle: 7
-  maxHorizontalAngle: 5
-  snapSpeed: 4
+  maxVerticalAngle: 60
+  maxHorizontalAngle: 30
+  snapSpeed: 10
   minSnapDelay: 0.1
   maxSnapDelay: 0.35
 --- !u!4 &1248969313
@@ -751,6 +752,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3231740968274221229, guid: 0aed412ee6684e44baf5fc49cb42966d, type: 3}
   m_PrefabInstance: {fileID: 424193194}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1312786847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1312786849}
+  - component: {fileID: 1312786848}
+  m_Layer: 0
+  m_Name: PostureManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1312786848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312786847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 846a22e3ac5f21b44ad6250047a1480b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxFlexion: 45
+  maxExtension: 30
+  maxRadial: 15
+  maxUlnar: 20
+  flexionAngle: 0
+  extensionAngle: 0
+  radialDeviation: 0
+  ulnarDeviation: 0
+  isInBadPosture: 0
+--- !u!4 &1312786849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312786847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.94941, y: 0, z: -0.33434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1401229022 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1121547808436306087, guid: 0aed412ee6684e44baf5fc49cb42966d, type: 3}
@@ -965,3 +1019,4 @@ SceneRoots:
   - {fileID: 424193194}
   - {fileID: 935732138}
   - {fileID: 1248969313}
+  - {fileID: 1312786849}
