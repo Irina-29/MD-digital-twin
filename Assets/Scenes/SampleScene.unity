@@ -236,7 +236,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.29260105, y: -0.04285876, z: 0.009334982, w: 0.9552281}
-  m_LocalPosition: {x: 5.595, y: 4.179, z: -5.167}
+  m_LocalPosition: {x: 5.62, y: 3.78, z: -4.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -504,6 +504,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -707946347760501602, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
   m_PrefabInstance: {fileID: 1566221084}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &806796705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 806796707}
+  - component: {fileID: 806796706}
+  m_Layer: 0
+  m_Name: WristPressureDatabase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &806796706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806796705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02515b8a9e699e8489f61112198d16ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jsonFile: {fileID: 4900000, guid: ca10241676d9dbe4bab19c8a2b4bf793, type: 3}
+--- !u!4 &806796707
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806796705}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.98875, y: 0, z: 1.08034}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,8 +696,10 @@ MonoBehaviour:
     bone02: {fileID: 1023006400}
     bone03: {fileID: 1831939617}
   sensorInput: {fileID: 1248969312}
+  pressureDatabase: {fileID: 806796706}
+  nerveController: {fileID: 1600378157}
   pressAngle: 35
-  pressDuration: 0.2
+  pressDuration: 0.22
   minDelay: 0.05
   maxDelay: 0.15
   wristBoneR: {fileID: 1829418281}
@@ -724,7 +771,7 @@ MonoBehaviour:
   wristHorizontalL: 0
   maxVerticalAngle: 60
   maxHorizontalAngle: 30
-  snapSpeed: 10
+  snapSpeed: 1
   minSnapDelay: 0.1
   maxSnapDelay: 0.35
 --- !u!4 &1248969313
@@ -923,6 +970,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 9.416
       objectReference: {fileID: 0}
+    - target: {fileID: -3501179231541625904, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3501179231541625904, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 70b03a7c82b33114c87f8865df657c4e, type: 2}
     - target: {fileID: 919132149155446097, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
       propertyPath: m_Name
       value: arm_nerve
@@ -938,6 +993,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
+--- !u!1 &1600378156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1600378158}
+  - component: {fileID: 1600378157}
+  m_Layer: 0
+  m_Name: NerveColorController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1600378157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600378156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ef0025abbeee041a28e170aa291ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nerveRenderer: {fileID: 1634062529}
+  targetPressure: 0
+  lerpSpeed: 5
+--- !u!4 &1600378158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600378156}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.99528, y: -0, z: 1.04278}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1630152859 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8693149363380561957, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
@@ -947,6 +1049,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2397229208898588261, guid: 0aed412ee6684e44baf5fc49cb42966d, type: 3}
   m_PrefabInstance: {fileID: 424193194}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1634062529 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -3501179231541625904, guid: 756865689c7f3594fa8b7b69e4f07e73, type: 3}
+  m_PrefabInstance: {fileID: 1566221084}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1665824545 stripped
 Transform:
@@ -1019,4 +1126,6 @@ SceneRoots:
   - {fileID: 424193194}
   - {fileID: 935732138}
   - {fileID: 1248969313}
+  - {fileID: 806796707}
+  - {fileID: 1600378158}
   - {fileID: 1312786849}

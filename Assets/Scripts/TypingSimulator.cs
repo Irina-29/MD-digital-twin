@@ -14,6 +14,8 @@ public class TypingSimulator : MonoBehaviour
 {
     public Finger[] fingers;
     public SensorSimulator sensorInput; // reference to the sensor input script
+    public WristPressureDatabase pressureDatabase; // reference to the script calculating the pressure 
+    public NerveColorController nerveController;  // reference to the script controlling the coloring animation 
 
     [Header("Typing speed settings")]
     public float pressAngle = 35f; // curl of fingers while typing
@@ -53,6 +55,9 @@ public class TypingSimulator : MonoBehaviour
     {
         if (sensorInput == null) return;
 
+        float flexion = sensorInput.wristVerticalR;
+        float deviation = sensorInput.wristHorizontalR;
+
         if (wristBoneR != null)
         {
             wristBoneR.localRotation = baseWristRotationR * Quaternion.Euler(
@@ -70,6 +75,20 @@ public class TypingSimulator : MonoBehaviour
                 -sensorInput.wristHorizontalL // mirrored for left hand
             );
         }
+
+        // Get the closest pressure from the data we have based on the wrist angles
+        bool typing = true;
+        float pressure = pressureDatabase.GetPressure(sensorInput.wristVerticalR, sensorInput.wristHorizontalR, typing);
+
+        // Normalize the pressure between two values
+        // - should be approximately the lowest and highest pressure recorded
+        // but I tweaked them for a more noticeable color change 
+        float normalized = Mathf.InverseLerp(1.2f, 3.4f, pressure);
+        normalized = Mathf.Pow(normalized, 2f);
+
+        // Debug.Log($"Flexion: {sensorInput.wristVerticalR}, Deviation: {sensorInput.wristHorizontalR}, Pressure: {pressure}, Normalized: {normalized}");
+
+        nerveController.SetPressureValue(normalized);
     }
 
     // Coroutine to simulate typing by randomly pressing fingers

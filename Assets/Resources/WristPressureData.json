@@ -1,0 +1,60 @@
+{
+  "entries": [
+    {
+      "label": "15° Flexion",
+      "flexionExtension": 15,
+      "radialUlnar": 0,
+      "pressureTyping": 1.9,
+      "pressureStatic": 1.4
+    },
+    {
+      "label": "0° Flexion",
+      "flexionExtension": 0,
+      "radialUlnar": 0,
+      "pressureTyping": 1.9,
+      "pressureStatic": 1.2
+    },
+    {
+      "label": "15° Extension",
+      "flexionExtension": -15,
+      "radialUlnar": 0,
+      "pressureTyping": 2.3,
+      "pressureStatic": 1.4
+    },
+    {
+      "label": "30° Extension",
+      "flexionExtension": -30,
+      "radialUlnar": 0,
+      "pressureTyping": 3.1,
+      "pressureStatic": 2.3
+    },
+    {
+      "label": "45° Extension",
+      "flexionExtension": -45,
+      "radialUlnar": 0,
+      "pressureTyping": 4.0,
+      "pressureStatic": 3.3
+    },
+    {
+      "label": "15° Radial",
+      "flexionExtension": -20,
+      "radialUlnar": -10,
+      "pressureTyping": 3.6,
+      "pressureStatic": 3.3
+    },
+    {
+      "label": "0° Radial",
+      "flexionExtension": -19,
+      "radialUlnar": 0,
+      "pressureTyping": 2.4,
+      "pressureStatic": 1.8
+    },
+    {
+      "label": "15° Ulnar",
+      "flexionExtension": -19,
+      "radialUlnar": 15,
+      "pressureTyping": 2.7,
+      "pressureStatic": 2.2
+    }
+  ]
+}
