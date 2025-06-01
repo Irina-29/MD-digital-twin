@@ -6,6 +6,7 @@ public class SensorSimulator : MonoBehaviour
 
     [Header("Simulation Mode")]
     public bool simulate = true;  // Set to false when using real sensors
+    public bool forceBadPosture = false;
 
     [Header("Simulated Wrist Angles (degrees)")]
     public float wristVerticalR = 0f;
@@ -28,6 +29,24 @@ public class SensorSimulator : MonoBehaviour
     {
         if (simulate)
         {
+            if (forceBadPosture)
+            {
+                // Force a known bad posture (e.g., 45° Extension)
+                wristVerticalR = -45f;       // Extension
+                wristHorizontalR = 0f;       // Neutral
+
+                postureAnalyzer.flexionExtension = wristVerticalR;
+                postureAnalyzer.radialUlnar = wristHorizontalR;
+            }
+            else
+            {
+                // Simulate normal wrist angles
+                wristVerticalR = Mathf.Clamp(wristVerticalR, -maxVerticalAngle, maxVerticalAngle);
+                wristHorizontalR = Mathf.Clamp(wristHorizontalR, -maxHorizontalAngle, maxHorizontalAngle);
+                wristVerticalL = Mathf.Clamp(wristVerticalL, -maxVerticalAngle, maxVerticalAngle);
+                wristHorizontalL = Mathf.Clamp(wristHorizontalL, -maxHorizontalAngle, maxHorizontalAngle);
+            }
+
             // RIGHT wrist snapping logic
             snapTimerR -= Time.deltaTime;
             if (snapTimerR <= 0f)
@@ -53,12 +72,16 @@ public class SensorSimulator : MonoBehaviour
             if (postureAnalyzer != null)
             {
                 // Vertical (Flexion/Extension)
-                postureAnalyzer.flexionAngle = wristVerticalR > 0 ? wristVerticalR : 0f;
-                postureAnalyzer.extensionAngle = wristVerticalR < 0 ? -wristVerticalR : 0f;
+
+                // postureAnalyzer.flexionAngle = wristVerticalR > 0 ? wristVerticalR : 0f;
+                // postureAnalyzer.extensionAngle = wristVerticalR < 0 ? -wristVerticalR : 0f;
+                postureAnalyzer.flexionExtension = wristVerticalR;
 
                 // Horizontal (Radial/Ulnar)
-                postureAnalyzer.radialDeviation = wristHorizontalR > 0 ? wristHorizontalR : 0f;
-                postureAnalyzer.ulnarDeviation = wristHorizontalR < 0 ? -wristHorizontalR : 0f;
+
+                // postureAnalyzer.radialDeviation = wristHorizontalR > 0 ? wristHorizontalR : 0f;
+                // postureAnalyzer.ulnarDeviation = wristHorizontalR < 0 ? -wristHorizontalR : 0f;
+                postureAnalyzer.radialUlnar = wristHorizontalR;
             }
         }
         else

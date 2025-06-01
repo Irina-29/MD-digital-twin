@@ -765,14 +765,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   postureAnalyzer: {fileID: 1312786848}
   simulate: 1
+  forceBadPosture: 0
   wristVerticalR: 0
   wristHorizontalR: 0
   wristVerticalL: 0
   wristHorizontalL: 0
-  maxVerticalAngle: 60
-  maxHorizontalAngle: 30
-  snapSpeed: 1
-  minSnapDelay: 0.1
+  maxVerticalAngle: 200
+  maxHorizontalAngle: 50
+  snapSpeed: 0.75
+  minSnapDelay: 0.2
   maxSnapDelay: 0.35
 --- !u!4 &1248969313
 Transform:
@@ -783,7 +784,7 @@ Transform:
   m_GameObject: {fileID: 1248969311}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.94941, y: 0, z: -0.33434}
+  m_LocalPosition: {x: 2.94941, y: 1.7, z: -0.33434}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -828,14 +829,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 846a22e3ac5f21b44ad6250047a1480b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxFlexion: 45
-  maxExtension: 30
-  maxRadial: 15
-  maxUlnar: 20
-  flexionAngle: 0
-  extensionAngle: 0
-  radialDeviation: 0
-  ulnarDeviation: 0
+  highPressureThreshold: 3
+  badPostureDurationThreshold: 10
+  flexionExtension: 0
+  radialUlnar: 0
+  pressureDatabase: {fileID: 806796706}
   isInBadPosture: 0
 --- !u!4 &1312786849
 Transform:
@@ -846,7 +844,7 @@ Transform:
   m_GameObject: {fileID: 1312786847}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.94941, y: 0, z: -0.33434}
+  m_LocalPosition: {x: 2.94941, y: 0, z: -2.32}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -38,7 +38,7 @@
     {
       "label": "15° Radial",
       "flexionExtension": -20,
-      "radialUlnar": -10,
+      "radialUlnar": 10,
       "pressureTyping": 3.6,
       "pressureStatic": 3.3
     },
@@ -52,7 +52,7 @@
     {
       "label": "15° Ulnar",
       "flexionExtension": -19,
-      "radialUlnar": 15,
+      "radialUlnar": -15,
       "pressureTyping": 2.7,
       "pressureStatic": 2.2
     }
