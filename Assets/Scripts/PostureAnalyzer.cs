@@ -1,7 +1,20 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+using TMPro;
 
 public class PostureAnalyzer : MonoBehaviour
 {
+    public GameObject warningBorder;
+    private Image warningImage;
+    private Coroutine blinkCoroutine;
+    public TMP_Text nerveStatusLabel;
+    public TMP_Text liveStatsText;
+    public Image warningSign;
+    public TMP_Text warningText;
+    private Coroutine warningBlinkCoroutine;
+    private AudioSource alarmAudio;
+
     // [Header("Thresholds")]
     // public float maxFlexion = 45f;
     // public float maxExtension = 30f;
@@ -35,6 +48,51 @@ public class PostureAnalyzer : MonoBehaviour
     {
         Debug.Log("🔔 Feedback: You've been in a bad posture for too long. Please adjust your wrist position.");
         // TODO: Trigger a UI warning, vibration, sound, or log to file
+        if (warningImage != null && blinkCoroutine == null)
+        {
+            blinkCoroutine = StartCoroutine(BlinkWarning());
+        }
+        if (!alarmAudio.isPlaying)
+            alarmAudio.Play();
+    }
+
+    private IEnumerator BlinkWarning()
+    {
+        float duration = 0.5f;
+        bool on = false;
+
+        while (true)
+        {
+            on = !on;
+            if (warningImage != null)
+            {
+                float alpha = on ? 0.6f : 0.0f;
+                warningImage.color = new Color(1f, 0f, 0f, alpha);
+            }
+
+            yield return new WaitForSeconds(duration);
+        }
+    }
+
+    private IEnumerator BlinkWarningSign()
+    {
+        while (true)
+        {
+            if (warningSign != null)
+                warningSign.color = new Color(1f, 1f, 1f, 1f); // show
+
+            yield return new WaitForSeconds(0.5f);
+
+            if (warningSign != null)
+                warningSign.color = new Color(1f, 1f, 1f, 0f); // hide
+
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    void Start()
+    {
+        alarmAudio = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -48,8 +106,60 @@ public class PostureAnalyzer : MonoBehaviour
         // float flexionExtension = flexionAngle - extensionAngle;
         // float radialUlnar = radialDeviation - ulnarDeviation;
 
+        if (warningImage == null && warningBorder != null)
+        {
+            warningImage = warningBorder.GetComponent<Image>();
+        }
+
         float pressure = pressureDatabase.GetPressure(flexionExtension, radialUlnar);
         isInBadPosture = pressure > highPressureThreshold;
+
+        string colorCode;
+
+        if (pressure >= 3.1f)
+        {
+            colorCode = "red";
+            if (warningBlinkCoroutine == null && warningSign != null)
+                warningBlinkCoroutine = StartCoroutine(BlinkWarningSign());
+
+            if (warningText != null)
+                warningText.alpha = 1f; // show warning text
+        }
+        else if (pressure >= 2.5f)
+        {
+            colorCode = "yellow";
+            if (warningBlinkCoroutine != null)
+            {
+                StopCoroutine(warningBlinkCoroutine);
+                warningBlinkCoroutine = null;
+            }
+
+            if (warningSign != null)
+                warningSign.color = new Color(1f, 1f, 1f, 0f); // fully hidden
+
+            if (warningText != null)
+                warningText.alpha = 0f; // hide text
+        }
+        else
+        {
+            colorCode = "green";
+            if (warningBlinkCoroutine != null)
+            {
+                StopCoroutine(warningBlinkCoroutine);
+                warningBlinkCoroutine = null;
+            }
+
+            if (warningSign != null)
+                warningSign.color = new Color(1f, 1f, 1f, 0f); // fully hidden
+
+            if (warningText != null)
+                warningText.alpha = 0f; // hide text
+        }
+
+        liveStatsText.text =
+            $"<b>Pressure:</b> <color={colorCode}>{pressure:F2} kPa</color>\n\n" +
+            $"<b>Flex/Ext:</b> {flexionExtension:F1}°\n" +
+            $"<b>Radial/Ulnar:</b> {radialUlnar:F1}°";
 
         Debug.Log($"Pressure at angles V:{flexionExtension} H:{radialUlnar} = {pressure}");
         Debug.Log($"Pressure = {pressure}, Threshold = {highPressureThreshold}, isBadPosture = {isInBadPosture}");
@@ -58,6 +168,7 @@ public class PostureAnalyzer : MonoBehaviour
         {
             badPostureTimer += Time.deltaTime;
             Debug.Log("⚠ Bad posture detected for " + badPostureTimer.ToString("F1") + "s");
+            nerveStatusLabel.text = "<b>Nerve compression:</b> <color=red>HIGH</color>";
             if (badPostureTimer >= badPostureDurationThreshold && !feedbackGiven)
             {
                 GiveFeedback();
@@ -68,6 +179,17 @@ public class PostureAnalyzer : MonoBehaviour
         {
             badPostureTimer = 0f;
             feedbackGiven = false;
+            if (alarmAudio.isPlaying)
+                alarmAudio.Stop();
+            nerveStatusLabel.text = "<b>Nerve compression:</b> <color=green>NORMAL</color>";
+            if (blinkCoroutine != null)
+            {
+                StopCoroutine(blinkCoroutine);
+                blinkCoroutine = null;
+            }
+
+            if (warningImage != null)
+                warningImage.color = new Color(1f, 0f, 0f, 0f); // transparent
         }
     }
 }
