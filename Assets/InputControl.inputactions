@@ -1,0 +1,34 @@
+{
+    "name": "InputControl",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "ae692e35-cdd9-4aa8-aff3-9dfe2769c061",
+            "actions": [
+                {
+                    "name": "Calibrate",
+                    "type": "Button",
+                    "id": "17637662-01e1-4e6d-92b6-d3ea75876d6c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "11bee397-492d-4797-be1c-97f4aaa858d9",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Calibrate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

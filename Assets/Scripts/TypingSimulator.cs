@@ -77,7 +77,7 @@ public class TypingSimulator : MonoBehaviour
         }
 
         // Get the closest pressure from the data we have based on the wrist angles
-        bool typing = true;
+        bool typing = sensorInput.typing;
         float pressure = pressureDatabase.GetPressure(sensorInput.wristVerticalR, sensorInput.wristHorizontalR, typing);
 
         // Normalize the pressure between two values

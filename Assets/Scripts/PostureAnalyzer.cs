@@ -161,8 +161,8 @@ public class PostureAnalyzer : MonoBehaviour
             $"<b>Flex/Ext:</b> {flexionExtension:F1}°\n" +
             $"<b>Radial/Ulnar:</b> {radialUlnar:F1}°";
 
-        Debug.Log($"Pressure at angles V:{flexionExtension} H:{radialUlnar} = {pressure}");
-        Debug.Log($"Pressure = {pressure}, Threshold = {highPressureThreshold}, isBadPosture = {isInBadPosture}");
+        // Debug.Log($"Pressure at angles V:{flexionExtension} H:{radialUlnar} = {pressure}");
+        // Debug.Log($"Pressure = {pressure}, Threshold = {highPressureThreshold}, isBadPosture = {isInBadPosture}");
 
         if (isInBadPosture)
         {
