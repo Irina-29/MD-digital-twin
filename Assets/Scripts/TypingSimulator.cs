@@ -47,7 +47,7 @@ public class TypingSimulator : MonoBehaviour
         if (wristBoneL != null)
             baseWristRotationL = wristBoneL.localRotation;
 
-        StartCoroutine(TypingLoop());
+        // StartCoroutine(TypingLoop());
     }
 
     // Runs every frame to animate the wrist movement
@@ -61,9 +61,9 @@ public class TypingSimulator : MonoBehaviour
         if (wristBoneR != null)
         {
             wristBoneR.localRotation = baseWristRotationR * Quaternion.Euler(
-                sensorInput.wristVerticalR,
                 0f,
-                sensorInput.wristHorizontalR
+                sensorInput.wristHorizontalR,
+                -sensorInput.wristVerticalR
             );
         }
 
@@ -86,7 +86,7 @@ public class TypingSimulator : MonoBehaviour
         float normalized = Mathf.InverseLerp(1.2f, 3.4f, pressure);
         normalized = Mathf.Pow(normalized, 2f);
 
-        // Debug.Log($"Flexion: {sensorInput.wristVerticalR}, Deviation: {sensorInput.wristHorizontalR}, Pressure: {pressure}, Normalized: {normalized}");
+        Debug.Log($"Flexion: {sensorInput.wristVerticalR}, Deviation: {sensorInput.wristHorizontalR}, Pressure: {pressure}, Normalized: {normalized}");
 
         nerveController.SetPressureValue(normalized);
     }

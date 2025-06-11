@@ -37,6 +37,7 @@ public class PostureAnalyzer : MonoBehaviour
     [Header("Sensor Input")]
     public float flexionExtension;   // Positive = Flexion, Negative = Extension
     public float radialUlnar;        // Positive = Radial, Negative = Ulnar
+    
 
     public WristPressureDatabase pressureDatabase;
 
