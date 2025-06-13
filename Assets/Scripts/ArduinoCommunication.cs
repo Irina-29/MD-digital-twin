@@ -1,15 +1,20 @@
 using UnityEngine;
 using System.IO.Ports;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class ArduinoCommunication : MonoBehaviour
 {
     public string portName = "COM5";
-    public int baudRate = 115200; //19200;
+    public int baudRate = 115200;
 
     private SerialPort serialPort;
     public SensorSimulator sensorSimulator;
     public PostureAnalyzer postureAnalyzer;
+
+    public TMP_Text calibrationStatusText;
+    public Button calibrateButton;
 
     private InputControl controls;
 
@@ -19,15 +24,8 @@ public class ArduinoCommunication : MonoBehaviour
         controls.Player.Calibrate.performed += ctx => SendCalibrationCommand();
     }
 
-    void OnEnable()
-    {
-        controls.Enable(); // Enable input
-    }
-
-    void OnDisable()
-    {
-        controls.Disable(); // Disable input
-    }
+    void OnEnable() => controls.Enable();
+    void OnDisable() => controls.Disable();
 
     void Start()
     {
@@ -37,53 +35,56 @@ public class ArduinoCommunication : MonoBehaviour
         {
             serialPort.Open();
             serialPort.ReadTimeout = 10;
-            // serialPort.NewLine = "\n";
-            serialPort.DtrEnable = true; 
+            serialPort.DtrEnable = true;
         }
         catch (System.Exception e)
         {
             Debug.Log("Serial port error: " + e.Message);
         }
+
+        if (calibrationStatusText != null)
+        {
+            calibrationStatusText.text = "NOT CALIBRATED";
+            calibrationStatusText.color = Color.red;
+        }
+
+        if (calibrateButton != null)
+            calibrateButton.onClick.AddListener(SendCalibrationCommand);
     }
 
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.C))
-        // {
-        //     SendCalibrationCommand();
-        // }
-
-
         if (serialPort != null && serialPort.IsOpen)
         {
             try
             {
-                string line = serialPort.ReadLine();
-                string[] values = line.Split(',');
+                string line = serialPort.ReadLine().Trim();
 
+                if (line == "CALIBRATED")
+                {
+                    Debug.Log("Calibration confirmed from Arduino");
+                    if (calibrationStatusText != null)
+                    {
+                        calibrationStatusText.text = "CALIBRATED";
+                        calibrationStatusText.color = Color.green;
+                    }
+                    return;
+                }
+
+                string[] values = line.Split(',');
                 if (values.Length >= 2)
                 {
-
                     float vertical = float.Parse(values[0]);
                     float horizontal = float.Parse(values[1]);
-                    //     // bool typing = values[2] == "1";
-                    Debug.Log("vertical: " + vertical + " horizontal: " + horizontal);
 
-                    // sensorSimulator.simulate = false;
+                    Debug.Log($"vertical: {vertical} horizontal: {horizontal}");
+
                     sensorSimulator.wristVerticalR = vertical;
                     sensorSimulator.wristHorizontalR = -horizontal;
+
                     if (postureAnalyzer != null)
                     {
-                        // Vertical (Flexion/Extension)
-
-                        // postureAnalyzer.flexionAngle = wristVerticalR > 0 ? wristVerticalR : 0f;
-                        // postureAnalyzer.extensionAngle = wristVerticalR < 0 ? -wristVerticalR : 0f;
                         postureAnalyzer.flexionExtension = vertical;
-
-                        // Horizontal (Radial/Ulnar)
-
-                        // postureAnalyzer.radialDeviation = wristHorizontalR > 0 ? wristHorizontalR : 0f;
-                        // postureAnalyzer.ulnarDeviation = wristHorizontalR < 0 ? -wristHorizontalR : 0f;
                         postureAnalyzer.radialUlnar = -horizontal;
                     }
                 }
@@ -113,5 +114,5 @@ public class ArduinoCommunication : MonoBehaviour
     {
         if (serialPort != null && serialPort.IsOpen)
             serialPort.Close();
-    }   
+    }
 }
