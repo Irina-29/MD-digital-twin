@@ -48,6 +48,14 @@ public class PostureAnalyzer : MonoBehaviour
     private float lastPulseTime = 0f;
     private float pulseCooldown = 1f; // seconds between pulses
 
+    // Logging data
+    private float badPostureDuration = 0f;
+    private float totalSessionTime = 0f;
+    private float maxPressure = float.MinValue;
+    private float pressureSum = 0f;
+    private int pressureSamples = 0;
+
+
     [Header("Posture State")]
     public bool isInBadPosture;
     private float badPostureTimer = 0f;
@@ -117,6 +125,11 @@ public class PostureAnalyzer : MonoBehaviour
         alarmAudio = GetComponent<AudioSource>();
     }
 
+    void OnApplicationQuit()
+    {
+        SessionLogger.WriteSummary(badPostureDuration, totalSessionTime, maxPressure, pressureSum / pressureSamples);
+    }
+
     void Update()
     {
         // isInBadPosture =
@@ -135,6 +148,30 @@ public class PostureAnalyzer : MonoBehaviour
 
         float pressure = pressureDatabase.GetPressure(flexionExtension, radialUlnar);
         isInBadPosture = pressure > highPressureThreshold;
+
+        // Track pressure stats
+        if (!float.IsNaN(pressure))
+        {
+            if (pressure > maxPressure) maxPressure = pressure;
+            pressureSum += pressure;
+            pressureSamples++;
+        }
+
+        totalSessionTime += Time.deltaTime;
+
+        bool isInRedZone = pressure >= 3.1f;
+        if (isInRedZone)
+        {
+            badPostureDuration += Time.deltaTime;
+            SessionLogger.LogEntry(
+                Time.time,                    
+                flexionExtension,
+                radialUlnar,
+                pressure,
+                badPostureDuration,
+                totalSessionTime
+            );
+        }
 
         string colorCode;
 
