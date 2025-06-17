@@ -18,6 +18,8 @@ public class ArduinoCommunication : MonoBehaviour
 
     private InputControl controls;
 
+    private bool isVibrating = false;
+
     void Awake()
     {
         controls = new InputControl();
@@ -107,6 +109,35 @@ public class ArduinoCommunication : MonoBehaviour
         {
             serialPort.WriteLine("CAL");
             Debug.Log("Sent calibration command to Arduino");
+        }
+    }
+
+    public void SendVibrationCommand()
+    {
+        if (serialPort != null && serialPort.IsOpen && !isVibrating)
+        {
+            serialPort.WriteLine("VIB_ON");
+            Debug.Log("Sent VIB_ON to Arduino");
+            isVibrating = true;
+        }
+    }
+
+    public void SendStopVibrationCommand()
+    {
+        if (serialPort != null && serialPort.IsOpen && isVibrating)
+        {
+            serialPort.WriteLine("VIB_OFF");
+            Debug.Log("Sent VIB_OFF to Arduino");
+            isVibrating = false;
+        }
+    }
+
+    public void SendPulseVibrationCommand()
+    {
+        if (serialPort != null && serialPort.IsOpen)
+        {
+            serialPort.WriteLine("VIB_PULSE");
+            Debug.Log("Sent VIB_PULSE to Arduino");
         }
     }
 

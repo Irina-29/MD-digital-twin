@@ -2117,10 +2117,11 @@ MonoBehaviour:
   warningSign: {fileID: 610015507}
   warningText: {fileID: 589182577}
   highPressureThreshold: 3
-  badPostureDurationThreshold: 10
+  badPostureDurationThreshold: 5
   flexionExtension: 0
   radialUlnar: 0
   pressureDatabase: {fileID: 806796706}
+  arduinoComm: {fileID: 421100142}
   isInBadPosture: 0
 --- !u!4 &1312786849
 Transform:

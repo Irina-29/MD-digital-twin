@@ -38,8 +38,15 @@ public class PostureAnalyzer : MonoBehaviour
     public float flexionExtension;   // Positive = Flexion, Negative = Extension
     public float radialUlnar;        // Positive = Radial, Negative = Ulnar
     
-
     public WristPressureDatabase pressureDatabase;
+
+    public ArduinoCommunication arduinoComm;
+
+    private bool isVibrating = false;
+
+    private bool pulseSent = false;
+    private float lastPulseTime = 0f;
+    private float pulseCooldown = 1f; // seconds between pulses
 
     [Header("Posture State")]
     public bool isInBadPosture;
@@ -48,13 +55,27 @@ public class PostureAnalyzer : MonoBehaviour
     private void GiveFeedback()
     {
         Debug.Log("🔔 Feedback: You've been in a bad posture for too long. Please adjust your wrist position.");
-        // TODO: Trigger a UI warning, vibration, sound, or log to file
+
         if (warningImage != null && blinkCoroutine == null)
-        {
             blinkCoroutine = StartCoroutine(BlinkWarning());
-        }
+
         if (!alarmAudio.isPlaying)
             alarmAudio.Play();
+        
+        if (arduinoComm != null && !isVibrating)
+        {
+            arduinoComm.SendVibrationCommand();
+            isVibrating = true;
+        }
+    }
+
+    private void StopFeedback()
+    {
+        if (arduinoComm != null && isVibrating)
+        {
+            arduinoComm.SendStopVibrationCommand();
+            isVibrating = false;
+        }
     }
 
     private IEnumerator BlinkWarning()
@@ -125,9 +146,17 @@ public class PostureAnalyzer : MonoBehaviour
 
             if (warningText != null)
                 warningText.alpha = 1f; // show warning text
+
+            if (!feedbackGiven && !pulseSent && Time.time - lastPulseTime > pulseCooldown)
+            {
+                arduinoComm?.SendPulseVibrationCommand();
+                pulseSent = true;
+                lastPulseTime = Time.time;
+            }
         }
         else if (pressure >= 2.5f)
         {
+            pulseSent = false;
             colorCode = "yellow";
             if (warningBlinkCoroutine != null)
             {
@@ -143,6 +172,7 @@ public class PostureAnalyzer : MonoBehaviour
         }
         else
         {
+            pulseSent = false;
             colorCode = "green";
             if (warningBlinkCoroutine != null)
             {
@@ -180,6 +210,7 @@ public class PostureAnalyzer : MonoBehaviour
         {
             badPostureTimer = 0f;
             feedbackGiven = false;
+            StopFeedback();
             if (alarmAudio.isPlaying)
                 alarmAudio.Stop();
             nerveStatusLabel.text = "<b>Nerve compression:</b> <color=green>NORMAL</color>";
