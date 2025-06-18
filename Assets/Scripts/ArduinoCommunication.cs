@@ -80,6 +80,7 @@ public class ArduinoCommunication : MonoBehaviour
                 {
                     isTyping = line.Substring(7) == "1";
                     sensorSimulator.typing = isTyping;
+                    postureAnalyzer.typing = isTyping;
                     return;
                 }
 

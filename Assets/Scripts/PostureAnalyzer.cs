@@ -59,6 +59,7 @@ public class PostureAnalyzer : MonoBehaviour
     private float pressureSum = 0f;
     private int pressureSamples = 0;
 
+    public bool typing = false;
 
     [Header("Posture State")]
     public bool isInBadPosture;
@@ -150,7 +151,7 @@ public class PostureAnalyzer : MonoBehaviour
             warningImage = warningBorder.GetComponent<Image>();
         }
 
-        float pressure = pressureDatabase.GetPressure(flexionExtension, radialUlnar);
+        float pressure = pressureDatabase.GetPressure(flexionExtension, radialUlnar, typing);
         isInBadPosture = pressure > highPressureThreshold;
 
         // Track pressure stats
