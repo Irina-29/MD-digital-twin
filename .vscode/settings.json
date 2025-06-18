@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "MD-digital-twin.sln"
+    "dotnet.defaultSolution": "MD digital twin.sln"
 }

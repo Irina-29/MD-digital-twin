@@ -7,7 +7,7 @@ public class SensorSimulator : MonoBehaviour
     [Header("Simulation Mode")]
     public bool simulate = true;  // Set to false when using real sensors
     public bool forceBadPosture = false;
-    public bool typing = true;
+    public bool typing = false;
 
     [Header("Simulated Wrist Angles (degrees)")]
     public float wristVerticalR = 0f;

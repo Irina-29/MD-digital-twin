@@ -29,6 +29,9 @@ public class TypingSimulator : MonoBehaviour
     private Quaternion[] baseRotations; // initial local rotations of all finger bones (to preserve base pose)
     private float[] fingerCooldowns; // ensure each finger can't be typed again too quickly
 
+    private Coroutine typingCoroutine = null;
+    private bool wasTyping = false;
+
     void Start()
     {
         baseRotations = new Quaternion[fingers.Length * 3];
@@ -80,10 +83,23 @@ public class TypingSimulator : MonoBehaviour
         bool typing = sensorInput.typing;
         float pressure = pressureDatabase.GetPressure(sensorInput.wristVerticalR, sensorInput.wristHorizontalR, typing);
 
+        // Start typing animation
+        // Manage typing animation based on typing state
+        if (typing && !wasTyping)
+        {
+            typingCoroutine = StartCoroutine(TypingLoop());
+        }
+        else if (!typing && wasTyping && typingCoroutine != null)
+        {
+            StopCoroutine(typingCoroutine);
+            typingCoroutine = null;
+        }
+        wasTyping = typing;
+
         // Normalize the pressure between two values
-        // - should be approximately the lowest and highest pressure recorded
-        // but I tweaked them for a more noticeable color change 
-        float normalized = Mathf.InverseLerp(1.2f, 3.4f, pressure);
+            // - should be approximately the lowest and highest pressure recorded
+            // but I tweaked them for a more noticeable color change 
+            float normalized = Mathf.InverseLerp(1.2f, 3.4f, pressure);
         normalized = Mathf.Pow(normalized, 2f);
 
         Debug.Log($"Flexion: {sensorInput.wristVerticalR}, Deviation: {sensorInput.wristHorizontalR}, Pressure: {pressure}, Normalized: {normalized}");

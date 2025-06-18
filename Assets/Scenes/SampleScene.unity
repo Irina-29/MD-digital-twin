@@ -1325,6 +1325,7 @@ MonoBehaviour:
   postureAnalyzer: {fileID: 1312786848}
   calibrationStatusText: {fileID: 645463436}
   calibrateButton: {fileID: 1871733898}
+  isTyping: 0
 --- !u!4 &421100143
 Transform:
   m_ObjectHideFlags: 0
@@ -3399,7 +3400,7 @@ MonoBehaviour:
   postureAnalyzer: {fileID: 1312786848}
   simulate: 0
   forceBadPosture: 0
-  typing: 1
+  typing: 0
   wristVerticalR: 0
   wristHorizontalR: 0
   wristVerticalL: 0
@@ -3472,7 +3473,7 @@ MonoBehaviour:
   warningText: {fileID: 589182577}
   highPressureThreshold: 3
   mediumPressureThreshold: 2.1
-  badPostureDurationThreshold: 10
+  badPostureDurationThreshold: 5
   flexionExtension: 0
   radialUlnar: 0
   pressureDatabase: {fileID: 806796706}

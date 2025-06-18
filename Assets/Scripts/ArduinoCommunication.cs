@@ -20,6 +20,9 @@ public class ArduinoCommunication : MonoBehaviour
 
     private bool isVibrating = false;
 
+    public bool isTyping = false;
+
+
     void Awake()
     {
         controls = new InputControl();
@@ -70,6 +73,13 @@ public class ArduinoCommunication : MonoBehaviour
                         calibrationStatusText.text = "CALIBRATED";
                         calibrationStatusText.color = Color.green;
                     }
+                    return;
+                }
+
+                if (line.StartsWith("TYPING:"))
+                {
+                    isTyping = line.Substring(7) == "1";
+                    sensorSimulator.typing = isTyping;
                     return;
                 }
 
