@@ -5,6 +5,9 @@ using TMPro;
 
 public class PostureAnalyzer : MonoBehaviour
 {
+    public PostureReportLogger reportLogger;
+    private float reportTimer = 0f;
+
     public GameObject warningBorder;
     private Image warningImage;
     private Coroutine blinkCoroutine;
@@ -23,6 +26,7 @@ public class PostureAnalyzer : MonoBehaviour
 
     [Header("Pressure Threshold")]
     public float highPressureThreshold = 3f;
+    public float mediumPressureThreshold = 2.1f;
 
     // [Header("Input Angles")]
     // public float flexionAngle;
@@ -31,7 +35,7 @@ public class PostureAnalyzer : MonoBehaviour
     // public float ulnarDeviation;
 
     [Header("Feedback")]
-    public float badPostureDurationThreshold = 60f; // 1 minute
+    public float badPostureDurationThreshold = 10f; // 10sec
     private bool feedbackGiven = false;
 
     [Header("Sensor Input")]
@@ -175,7 +179,7 @@ public class PostureAnalyzer : MonoBehaviour
 
         string colorCode;
 
-        if (pressure >= 3.1f)
+        if (isInBadPosture)
         {
             colorCode = "red";
             if (warningBlinkCoroutine == null && warningSign != null)
@@ -191,7 +195,7 @@ public class PostureAnalyzer : MonoBehaviour
                 lastPulseTime = Time.time;
             }
         }
-        else if (pressure >= 2.5f)
+        else if (pressure >= mediumPressureThreshold)
         {
             pulseSent = false;
             colorCode = "yellow";
@@ -206,6 +210,8 @@ public class PostureAnalyzer : MonoBehaviour
 
             if (warningText != null)
                 warningText.alpha = 0f; // hide text
+
+
         }
         else
         {
@@ -223,6 +229,7 @@ public class PostureAnalyzer : MonoBehaviour
             if (warningText != null)
                 warningText.alpha = 0f; // hide text
         }
+
 
         liveStatsText.text =
             $"<b>Pressure:</b> <color={colorCode}>{pressure:F2} kPa</color>\n\n" +
@@ -242,6 +249,8 @@ public class PostureAnalyzer : MonoBehaviour
                 GiveFeedback();
                 feedbackGiven = true;
             }
+
+
         }
         else
         {
@@ -250,7 +259,15 @@ public class PostureAnalyzer : MonoBehaviour
             StopFeedback();
             if (alarmAudio.isPlaying)
                 alarmAudio.Stop();
-            nerveStatusLabel.text = "<b>Nerve compression:</b> <color=green>NORMAL</color>";
+
+            if (pressure >= mediumPressureThreshold)
+            {
+                nerveStatusLabel.text = "<b>Nerve compression:</b> <color=yellow>MEDIUM</color>";
+            }
+            else
+            {
+                nerveStatusLabel.text = "<b>Nerve compression:</b> <color=green>NORMAL</color>";
+            }
             if (blinkCoroutine != null)
             {
                 StopCoroutine(blinkCoroutine);
@@ -260,5 +277,19 @@ public class PostureAnalyzer : MonoBehaviour
             if (warningImage != null)
                 warningImage.color = new Color(1f, 0f, 0f, 0f); // transparent
         }
+        
+        // For the Report
+        if (pressure >= highPressureThreshold)
+        {
+            reportTimer += Time.deltaTime;
+            if (reportTimer >= 0.3f)  // log every 0.3 second
+            {
+                string status = badPostureTimer >= badPostureDurationThreshold  ? "Red" : "Yellow";
+                reportLogger.LogEntry(flexionExtension, radialUlnar, pressure, badPostureTimer, status);
+                reportTimer = 0f;
+            }
+            
+        }
+
     }
 }
