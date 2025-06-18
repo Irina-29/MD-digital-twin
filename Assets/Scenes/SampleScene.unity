@@ -3471,12 +3471,8 @@ MonoBehaviour:
   warningSign: {fileID: 610015507}
   warningText: {fileID: 589182577}
   highPressureThreshold: 3
-<<<<<<< Updated upstream
-  badPostureDurationThreshold: 5
-=======
   mediumPressureThreshold: 2.1
   badPostureDurationThreshold: 10
->>>>>>> Stashed changes
   flexionExtension: 0
   radialUlnar: 0
   pressureDatabase: {fileID: 806796706}
